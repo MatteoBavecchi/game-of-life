@@ -1,30 +1,49 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface CounterState {
-  value: number
+export interface GameState {
+  step: number,
+  rows: number,
+  cols: number,
+  grid: boolean[][],
 }
 
-const initialState: CounterState = {
-  value: 0,
+const initialState: GameState = {
+  step: 0,
+  rows: 0,
+  cols: 0,
+  grid: []
 }
+
 
 export const gameSlice = createSlice({
-  name: 'counter',
+  name: 'game',
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1
+    initializeGrid: (state, action: PayloadAction<{ rand: boolean }>) => {
+      state.grid = [];
+      for (var i = 0; i < state.rows; i++) {
+        var row = [];
+        for (var j = 0; j < state.cols; j++) {
+          if (action.payload.rand) {
+            row.push(Math.random() < 0.5);
+          } else {
+            row.push(false);
+          }
+
+        }
+        state.grid.push(row);
+      }
     },
-    decrement: (state) => {
-      state.value -= 1
+    setRows: (state, action: PayloadAction<number>) => {
+      state.rows = action.payload
     },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload
+    setColumns: (state, action: PayloadAction<number>) => {
+      state.cols = action.payload
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = gameSlice.actions
+export const { initializeGrid, setColumns, setRows } = gameSlice.actions
 
 export default gameSlice.reducer
