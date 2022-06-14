@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { executeGame, makeNewGrid } from '../../Utils/Utils';
 
 export interface GameState {
-  step: number,
   rows: number,
   cols: number,
   grid: boolean[][],
 }
 
 const initialState: GameState = {
-  step: 0,
-  rows: 0,
-  cols: 0,
+  rows: 20,
+  cols: 40,
   grid: []
 }
 
@@ -19,31 +18,32 @@ export const gameSlice = createSlice({
   name: 'game',
   initialState,
   reducers: {
-    initializeGrid: (state, action: PayloadAction<{ rand: boolean }>) => {
-      state.grid = [];
-      for (var i = 0; i < state.rows; i++) {
-        var row = [];
-        for (var j = 0; j < state.cols; j++) {
-          if (action.payload.rand) {
-            row.push(Math.random() < 0.5);
-          } else {
-            row.push(false);
-          }
 
-        }
-        state.grid.push(row);
-      }
+    initializeGrid: (state, action: PayloadAction<{ rand: boolean }>) => {
+      state.grid = makeNewGrid(state.rows, state.cols, action.payload.rand);
     },
+
     setRows: (state, action: PayloadAction<number>) => {
       state.rows = action.payload
     },
+
     setColumns: (state, action: PayloadAction<number>) => {
       state.cols = action.payload
     },
+
+    nextGrid: (state) => {
+      var newGrid = executeGame(state.grid.slice(0));
+      state.grid = newGrid;
+    },
+
+    toggleCell: (state, action: PayloadAction<{ x: number, y: number }>) => {
+      state.grid[action.payload.x][action.payload.y] = !state.grid[action.payload.x][action.payload.y];
+    }
+
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { initializeGrid, setColumns, setRows } = gameSlice.actions
+export const { initializeGrid, setColumns, setRows, nextGrid, toggleCell } = gameSlice.actions
 
 export default gameSlice.reducer

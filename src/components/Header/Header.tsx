@@ -4,14 +4,32 @@ import {
     Heading,
     Flex,
     Button,
-    useColorMode,
     HStack
 } from "@chakra-ui/react";
 
-import { FaPlay, FaPause, FaFileUpload } from "react-icons/fa";
+import { FaPlay, FaRandom, FaFileUpload, FaPause } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Redux/Store/Store";
+
+import { play, pause, increment } from "../../Redux/Features/Step";
+import { initializeGrid, nextGrid, setColumns, setRows } from "../../Redux/Features/Game";
 
 export const Header = () => {
-    const { colorMode, toggleColorMode } = useColorMode();
+    const dispatch = useDispatch()
+    const step = useSelector((state: RootState) => state.step.step);
+    const isRunning = useSelector((state: RootState) => state.step.isRunning);
+
+    const handlePlay = () => {
+        let myInterval = setInterval(() => {
+            dispatch(play());
+            dispatch(increment());
+            dispatch(nextGrid());
+        }, 500);
+    }
+    const handlePause = () => {
+        // clearInterval(myInterval);
+    }
+
 
     return (
         <Flex
@@ -34,16 +52,25 @@ export const Header = () => {
                     <Button leftIcon={<FaFileUpload />} colorScheme='yellow' >
                         Import
                     </Button>
-                    <Button colorScheme='white' variant={"outline"}>
-                        < FaPlay size={"24px"} />
+                    {
+                        !isRunning ?
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePlay()} >
+                                < FaPlay size={"24px"} />
+                            </Button> :
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePause()}>
+                                < FaPause size={"24px"} />
+                            </Button>
+                    }
+                    <Button colorScheme='white' variant={"outline"} onClick={() => dispatch(initializeGrid({ rand: true }))}>
+                        < FaRandom size={"24px"} />
                     </Button>
-                    <Button colorScheme='white' variant={"outline"}>
-                        < FaPause size={"24px"} />
+                    <Button colorScheme='white' variant={"outline"} >
+                        Next
                     </Button>
                 </HStack>
-              
+
             </Flex>
-            <Heading  size="xl" flex-position={"flex-end"}>Step: 0</Heading>
+            <Heading size="xl" flex-position={"flex-end"}>Step: {step}</Heading>
         </Flex>
     );
 };
