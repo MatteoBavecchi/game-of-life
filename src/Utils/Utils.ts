@@ -88,7 +88,7 @@ export const executeGame = (grid: boolean[][]) => {
 
 //textFileParsed parses data from the uploaded file
 //this method return a Promise because FileReader.onload is async
-export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Promise<TextFileParserType | null> => {
+export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Promise<TextFileParserType> => {
     return new Promise((resolve, reject) => {
         var file = event.currentTarget.files![0];
         var reader = new FileReader();
@@ -135,7 +135,7 @@ export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Prom
                     step: stepNumber
                 })
             } else {
-                resolve(null);
+                reject();
             }
         }
     });

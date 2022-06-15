@@ -14,8 +14,10 @@ import {
   FormLabel,
   useDisclosure,
   Button,
-  Input
+  Input,
+  useToast
 } from '@chakra-ui/react';
+
 
 import { RootState } from './Redux/Store/Store';
 import { useSelector, useDispatch } from 'react-redux'
@@ -28,6 +30,7 @@ import { textFileParser } from './Utils/Utils';
 
 import { Header } from './components/Header/Header';
 import GameGrid from './components/Grid/GameGrid';
+import { FaCloud } from 'react-icons/fa';
 
 
 function App() {
@@ -45,21 +48,35 @@ function App() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const toast = useToast()
+
   const dispatch = useDispatch()
 
   const onUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     //The method return a promise
-    textFileParser(event).then((res: TextFileParserType | null) => {
-      //If the result is not null we dispatch the actions for update data
-      if (res !== null) {
-        dispatch(setColumns(res.cols));
-        dispatch(setRows(res.rows));
-        dispatch(setStep(res.step));
-        dispatch(setGrid(res.newGrid));
-      } else {
-        alert("Error during parsing file! Please upload a correct file.");
-      }
-    });
+    textFileParser(event).then((res: TextFileParserType) => {
+      //If the result is correct we dispatch the actions for update data
+      dispatch(setColumns(res.cols));
+      dispatch(setRows(res.rows));
+      dispatch(setStep(res.step));
+      dispatch(setGrid(res.newGrid));
+    }).then(() => {
+      toast({
+        title: 'File uploaded',
+        description: "The file has benn successfully uploaded!",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+    }).catch(() => {
+      toast({
+        title: 'Something went wrong!',
+        description: "The file was not correct!",
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    })
   }
 
   return (
@@ -83,13 +100,19 @@ function App() {
           <ModalHeader as="div">Import settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <FormControl mb={2}>
-              <FormLabel>Width: {cols}</FormLabel>
-              <FormLabel>height: {rows}</FormLabel>
-            </FormControl>
 
             <FormControl mb={2} >
-              <Input type="file" onChange={(event) => onUpload(event)} />
+
+              <FormLabel
+                border={'1px solid #ccc'}
+                display={'inline-block'}
+                mt={2}
+                padding={'6px 12px'}
+                cursor={'pointer'}
+                htmlFor='inputFile'
+              >
+                <FaCloud style={{ float: "left" }} size="24px"></FaCloud> Upload file</FormLabel>
+              <Input style={{ display: 'none' }} id="inputFile" type="file" onChange={(event) => onUpload(event)} />
             </FormControl>
 
           </ModalBody>
