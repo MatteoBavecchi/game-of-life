@@ -5,6 +5,7 @@ export const Footer = () => {
     const { colorMode } = useColorMode();
     return (
         <Box
+            bottom={0}
             as="footer"
             pr={2}
             bg={`mode.${colorMode}.box`}

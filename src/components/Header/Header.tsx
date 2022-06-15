@@ -5,6 +5,7 @@ import {
     Flex,
     Button,
     HStack,
+    propNames,
 
 } from "@chakra-ui/react";
 
@@ -16,14 +17,19 @@ import { RootState } from "../../Redux/Store/Store";
 import { play, pause, increment, setTimerId, setStep } from "../../Redux/Features/Step";
 import { initializeGrid, nextGrid, setColumns, setRows } from "../../Redux/Features/Game";
 
-export const Header = () => {
+interface Props {
+    handleOpen?: () => void,
+}
+
+export const Header: React.FC<Props> = ({ handleOpen }) => {
+
 
     const dispatch = useDispatch()
     const step = useSelector((state: RootState) => state.step.step);
     const isRunning = useSelector((state: RootState) => state.step.isRunning);
     const timerId = useSelector((state: RootState) => state.step.timerId);
 
-   
+
     const handleButton = () => {
 
         if (isRunning) {
@@ -68,7 +74,7 @@ export const Header = () => {
                     Game of Life
                 </Heading>
                 <HStack spacing='24px'>
-                    <Button leftIcon={<FaFileUpload />} colorScheme='yellow' >
+                    <Button leftIcon={<FaFileUpload />} colorScheme='yellow' onClick={() => handleOpen!()} >
                         Import
                     </Button>
                     {
@@ -93,7 +99,7 @@ export const Header = () => {
 
             </Flex>
             <Heading size="xl" flex-position={"flex-end"}>Step: {step}</Heading>
-            
+
         </Flex>
     );
 };

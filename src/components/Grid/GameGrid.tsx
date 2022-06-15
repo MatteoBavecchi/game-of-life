@@ -23,7 +23,7 @@ const GameGrid: React.FC<Props> = ({ rows, cols, grid }) => {
     <SimpleGrid
       style={{ transform: 'rotate(90deg)' }}
       data-testid="grid-wrapper"
-      gridTemplateColumns={`repeat(${cols}, 20px)`}
+      gridTemplateColumns={`repeat(${cols}, 16px)`}
       gridGap="2px"
       mt={4}
     >
@@ -35,8 +35,8 @@ const GameGrid: React.FC<Props> = ({ rows, cols, grid }) => {
                 onClick={() => handleCell(index, rowIndex)}
                 key={rowIndex}
                 data-testid="cell"
-                width="20px"
-                height="20px"
+                width="16px"
+                height="16px"
                 backgroundColor={cell ? 'black' : 'gray.300'}
                 cursor="pointer"
               />

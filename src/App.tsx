@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import {
   Heading,
@@ -15,7 +15,8 @@ import {
   FormLabel,
   useDisclosure,
   Button,
-  Text
+  Text,
+  Input
 } from '@chakra-ui/react';
 import { RootState } from './Redux/Store/Store';
 import { useSelector, useDispatch } from 'react-redux'
@@ -23,7 +24,7 @@ import { initializeGrid, setColumns, setRows } from './Redux/Features/Game';
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import GameGrid from './components/Grid/GameGrid';
-import { FaGrinSquint } from 'react-icons/fa';
+import { FaCloud, FaGrinSquint } from 'react-icons/fa';
 
 
 function App() {
@@ -38,6 +39,10 @@ function App() {
   const rows = useSelector((state: RootState) => state.game.rows);
   const cols = useSelector((state: RootState) => state.game.cols);
 
+  const [widthError, setWidthError] = useState(false);
+  const [heightError, setHeightError] = useState(false);
+
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const dispatch = useDispatch()
@@ -50,42 +55,74 @@ function App() {
 
   });
 
+  const handleSave = () => {
+
+
+
+  }
+
   return (
     <Box>
-      <Header></Header>
+      <Header handleOpen={onOpen}></Header>
       <Flex
         w="100%"
-        height={'calc(100vh - 90px)'}
         justifyContent="center"
+        style={{ margin: "auto" }}
+        direction="column"
+        align="center"
+        maxW={{ xl: "1200px" }}
+        m="0 auto"
       >
         {grid && <GameGrid rows={rows} cols={cols} grid={grid}></GameGrid>}
-        <button onClick={onOpen}>Open modal</button>
       </Flex>
       <Footer></Footer>
 
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} >
         <ModalOverlay />
         <ModalContent as="div">
-          <ModalHeader as="div">Aggiungi un piatto</ModalHeader>
+          <ModalHeader as="div">Import settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Text fontSize="sm" color="#49576E" mb={4} lineHeight="normal">
-              Potrai modificare queste informazioni ed altre ancora in un
-              secondo momento.
-            </Text>
+            <FormControl mb={2}>
+              <FormLabel>Width: {cols}</FormLabel>
+              <FormLabel>height: {rows}</FormLabel>
+            </FormControl>
+
+            <FormControl mb={2} >
+              <Button leftIcon={<FaCloud />} colorScheme='teal' variant='solid'>
+                Upload file
+              </Button>
+            </FormControl>
 
 
           </ModalBody>
 
           <ModalFooter>
+            <Button
+              backgroundColor="#2B5F38"
+              color="white"
+              mr={3}
+              onClick={() => {
+                handleSave();
+                onClose();
+              }}
+              _hover={{ background: "#21452A" }}
+              _activeLink={{ background: "#21452A" }}
+              _active={{ background: "#21452A" }}
+              _focus={{ background: "#21452A" }}
+            >
+              Save
+            </Button>
 
             <Button
               onClick={() => {
+                setHeightError(false);
+                setWidthError(false);
                 onClose();
               }}
             >
-              Annulla
+              Cancel
             </Button>
           </ModalFooter>
         </ModalContent>
