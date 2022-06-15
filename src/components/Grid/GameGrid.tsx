@@ -19,7 +19,6 @@ const GameGrid: React.FC<GridProps> = ({ rows, cols, grid }) => {
 
   return (
     <SimpleGrid
-      style={{ transform: 'rotate(90deg)' }}
       data-testid="grid-wrapper"
       gridTemplateColumns={`repeat(${cols}, 16px)`}
       gridGap="2px"
@@ -27,7 +26,7 @@ const GameGrid: React.FC<GridProps> = ({ rows, cols, grid }) => {
     >
       {grid &&
         grid.map((column, index) => (
-          <SimpleGrid key={index} gridGap="2px">
+          <React.Fragment key={index}>
             {column.map((cell: boolean, rowIndex: number) => (
               <Box
                 onClick={() => handleCell(index, rowIndex)}
@@ -39,7 +38,7 @@ const GameGrid: React.FC<GridProps> = ({ rows, cols, grid }) => {
                 cursor="pointer"
               />
             ))}
-          </SimpleGrid>
+          </React.Fragment>
         ))}
     </SimpleGrid>
   )

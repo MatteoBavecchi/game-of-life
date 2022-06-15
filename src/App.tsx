@@ -27,7 +27,6 @@ import { TextFileParserType } from './Types/Utils';
 import { textFileParser } from './Utils/Utils';
 
 import { Header } from './components/Header/Header';
-import { Footer } from './components/Footer/Footer';
 import GameGrid from './components/Grid/GameGrid';
 
 
@@ -77,8 +76,6 @@ function App() {
       >
         {grid && <GameGrid rows={rows} cols={cols} grid={grid}></GameGrid>}
       </Flex>
-      <Footer></Footer>
-
 
       <Modal isOpen={isOpen} onClose={onClose} >
         <ModalOverlay />
