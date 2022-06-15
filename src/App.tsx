@@ -25,6 +25,7 @@ import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import GameGrid from './components/Grid/GameGrid';
 import { FaCloud, FaGrinSquint } from 'react-icons/fa';
+import { textFileParser } from './Utils/Utils';
 
 
 function App() {
@@ -61,6 +62,12 @@ function App() {
 
   }
 
+  const onUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    textFileParser(event).then(res => {
+      console.log(res);
+    });
+  }
+
   return (
     <Box>
       <Header handleOpen={onOpen}></Header>
@@ -90,9 +97,7 @@ function App() {
             </FormControl>
 
             <FormControl mb={2} >
-              <Button leftIcon={<FaCloud />} colorScheme='teal' variant='solid'>
-                Upload file
-              </Button>
+              <Input type="file" onChange={(event) => onUpload(event)} />
             </FormControl>
 
 

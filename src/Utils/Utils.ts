@@ -16,6 +16,7 @@ export const makeNewGrid = (height: number, width: number, rand?: boolean) => {
     return grid;
 }
 
+
 export const countNeighbors = (grid: boolean[][], x: number, y: number) => {
 
     let height: number = grid.length;
@@ -40,6 +41,7 @@ export const countNeighbors = (grid: boolean[][], x: number, y: number) => {
     return aliveNeighbors;
 }
 
+
 export const executeGame = (grid: boolean[][]) => {
 
     //The size of the grid
@@ -48,7 +50,6 @@ export const executeGame = (grid: boolean[][]) => {
 
     //newGrid will be the next state of the game
     var newGrid = makeNewGrid(height, width);
-
 
     for (let i = 0; i < height; i++) {
         for (let j = 0; j < width; j++) {
@@ -77,4 +78,58 @@ export const executeGame = (grid: boolean[][]) => {
         }
     }
     return newGrid;
+}
+
+
+//textFileParsed parses data from the uploaded file
+//this method reurn a Promise because FileReader.onload is async
+export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>) => {
+    return new Promise((resolve, reject) => {
+        var file = event.currentTarget.files![0];
+        var reader = new FileReader();
+        reader.readAsText(file);
+
+        reader.onload = (event) => {
+            //onload function which reads file data and do task
+            let fileContent: string | undefined = event.target!.result?.toString();
+
+            //allLines is a string array, which have in every position a single line of text
+            const allLines: string[] = fileContent!.split(/\r\n|\n/);
+
+            //we extract stepNumber rows and cols from the frist and the second lines with some array methods:
+            var stepNumber: number = +allLines[0].match(/\d+/)![0];
+            var rows: number = +allLines[1].slice(0, 1);
+            var cols: number = +allLines[1].slice(2);
+
+            var newGrid = [];
+            //Now we explore all the lines and we populate a new boolean array
+            // '*' -> true
+            // '.' -> false
+            for (let i = 2; i < allLines.length; i++) {
+                var fileRow = allLines[i];
+                var newRow = [];
+                for (let j = 0; j < fileRow.length; j++) {
+                    if (fileRow[j] === '*') {
+                        newRow.push(true);
+                    }
+                    if (fileRow[j] === '.') {
+                        newRow.push(false);
+                    }
+                }
+                newGrid.push(newRow);
+            }
+
+            //We check if data is greater than 0 and if grid size is correct
+            if (rows > 0 && cols > 0 && stepNumber >= 0) {
+                resolve({
+                    newGrid: newGrid,
+                    cols: cols,
+                    rows: rows,
+                    step: stepNumber
+                })
+            } else {
+                resolve(null);
+            }
+        }
+    });
 }
