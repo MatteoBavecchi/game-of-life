@@ -6,7 +6,7 @@ export const makeNewGrid = (height: number, width: number, rand?: boolean) => {
         for (var j = 0; j < width; j++) {
             if (rand) {
                 //If rand is true, the grid is populated in a random way
-                row.push(Math.random() < 0.5);
+                row.push(Math.random() < 0.2);
             } else {
                 row.push(false);
             }

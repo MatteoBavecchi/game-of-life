@@ -4,8 +4,10 @@ import {
     Heading,
     Flex,
     Button,
-    HStack
+    HStack,
+
 } from "@chakra-ui/react";
+
 
 import { FaPlay, FaRandom, FaFileUpload, FaPause, FaUndo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +23,7 @@ export const Header = () => {
     const isRunning = useSelector((state: RootState) => state.step.isRunning);
     const timerId = useSelector((state: RootState) => state.step.timerId);
 
+   
     const handleButton = () => {
 
         if (isRunning) {
@@ -90,6 +93,7 @@ export const Header = () => {
 
             </Flex>
             <Heading size="xl" flex-position={"flex-end"}>Step: {step}</Heading>
+            
         </Flex>
     );
 };
