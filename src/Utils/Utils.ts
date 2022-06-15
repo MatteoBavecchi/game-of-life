@@ -106,6 +106,7 @@ export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Prom
             var rows: number = +allLines[1].slice(0, 1);
             var cols: number = +allLines[1].slice(2);
 
+
             var newGrid = [];
             //Now we explore all the lines and we populate a new array of booleans
             // '*' -> true
@@ -125,7 +126,7 @@ export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Prom
             }
 
             //We check if data is greater than 0
-            if (rows > 0 && cols > 0 && stepNumber >= 0) {
+            if (rows > 0 && cols > 0 && stepNumber >= 0 && newGrid.length === rows && newGrid[0].length === cols) {
                 //In this case we resolve the promise and we return data
                 resolve({
                     newGrid: newGrid,

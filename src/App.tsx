@@ -57,7 +57,7 @@ function App() {
         dispatch(setStep(res.step));
         dispatch(setGrid(res.newGrid));
       } else {
-        alert("Error during file parsing");
+        alert("Error during parsing file! Please upload a correct file.");
       }
     });
   }
