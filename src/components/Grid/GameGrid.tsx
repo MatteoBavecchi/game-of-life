@@ -3,23 +3,21 @@ import { SimpleGrid, Box } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { toggleCell } from './../../Redux/Features/Game'
 
-interface Props {
+interface GridProps {
   rows: number,
   cols: number,
   grid: boolean[][]
 }
 
-
-
-const GameGrid: React.FC<Props> = ({ rows, cols, grid }) => {
+const GameGrid: React.FC<GridProps> = ({ rows, cols, grid }) => {
 
   const dispatch = useDispatch();
 
   const handleCell = (x: number, y: number) => {
     dispatch(toggleCell({ x, y }));
   }
-  return (
 
+  return (
     <SimpleGrid
       style={{ transform: 'rotate(90deg)' }}
       data-testid="grid-wrapper"

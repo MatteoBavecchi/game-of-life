@@ -13,7 +13,6 @@ const initialState: GameState = {
   grid: []
 }
 
-
 export const gameSlice = createSlice({
   name: 'game',
   initialState,
@@ -32,6 +31,8 @@ export const gameSlice = createSlice({
     },
 
     nextGrid: (state) => {
+      //executeGame create a new grid state following the "game-of-life" algorithm,
+      //slice is used for prevent a "shallow copy"
       var newGrid = executeGame(state.grid.slice(0));
       state.grid = newGrid;
     },

@@ -1,55 +1,55 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
     Heading,
     Flex,
     Button,
     HStack,
-    propNames,
-
 } from "@chakra-ui/react";
-
 
 import { FaPlay, FaRandom, FaFileUpload, FaPause, FaUndo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/Store/Store";
 
 import { play, pause, increment, setTimerId, setStep } from "../../Redux/Features/Step";
-import { initializeGrid, nextGrid, setColumns, setRows } from "../../Redux/Features/Game";
+import { initializeGrid, nextGrid } from "../../Redux/Features/Game";
 
-interface Props {
+interface HeaderProps {
     handleOpen?: () => void,
 }
 
-export const Header: React.FC<Props> = ({ handleOpen }) => {
-
+export const Header: React.FC<HeaderProps> = ({ handleOpen }) => {
 
     const dispatch = useDispatch()
+
     const step = useSelector((state: RootState) => state.step.step);
     const isRunning = useSelector((state: RootState) => state.step.isRunning);
     const timerId = useSelector((state: RootState) => state.step.timerId);
 
 
-    const handleButton = () => {
+    const handlePlayButton = () => {
 
         if (isRunning) {
             dispatch(pause());
+            //we stop the timer and we set it to zero
             clearInterval(timerId);
             dispatch(setTimerId(0));
             return;
         }
         dispatch(play());
+        //we create a new timer when every 500ms we execute the game
         const newTimerId = setInterval(() => {
             dispatch(increment());
             dispatch(nextGrid());
         }, 500);
         dispatch(setTimerId(newTimerId));
+
     }
 
 
-    const clear = (rand: boolean) => {
+    const handleClearButton = (rand: boolean) => {
         if (isRunning) {
-            handleButton();
+            handlePlayButton();
         }
         dispatch(setStep(0));
         dispatch(initializeGrid({ rand: rand }));
@@ -70,7 +70,7 @@ export const Header: React.FC<Props> = ({ handleOpen }) => {
             zIndex={2}
         >
             <Flex align="center" mr={5}>
-                <Heading size="xl" ml="10px" mr="60px">
+                <Heading size="lg" ml="10px" mr="60px">
                     Game of Life
                 </Heading>
                 <HStack spacing='24px'>
@@ -79,19 +79,19 @@ export const Header: React.FC<Props> = ({ handleOpen }) => {
                     </Button>
                     {
                         !isRunning ?
-                            <Button colorScheme='white' variant={"outline"} onClick={() => handleButton()} >
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePlayButton()} >
                                 < FaPlay size={"24px"} />
                             </Button> :
-                            <Button colorScheme='white' variant={"outline"} onClick={() => handleButton()}>
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePlayButton()}>
                                 < FaPause size={"24px"} />
                             </Button>
                     }
 
-                    <Button colorScheme='white' variant={"outline"} onClick={() => clear(false)}>
+                    <Button colorScheme='white' variant={"outline"} onClick={() => handleClearButton(false)}>
                         <FaUndo size={"24px"} />
                     </Button>
 
-                    <Button colorScheme='white' variant={"outline"} onClick={() => clear(true)}>
+                    <Button colorScheme='white' variant={"outline"} onClick={() => handleClearButton(true)}>
                         < FaRandom size={"24px"} />
                     </Button>
 
