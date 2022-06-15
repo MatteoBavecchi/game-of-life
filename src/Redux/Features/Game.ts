@@ -38,12 +38,15 @@ export const gameSlice = createSlice({
 
     toggleCell: (state, action: PayloadAction<{ x: number, y: number }>) => {
       state.grid[action.payload.x][action.payload.y] = !state.grid[action.payload.x][action.payload.y];
-    }
+    },
 
+    setGrid: (state, action: PayloadAction<boolean[][]>) => {
+      state.grid = action.payload
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { initializeGrid, setColumns, setRows, nextGrid, toggleCell } = gameSlice.actions
+export const { initializeGrid, setColumns, setRows, nextGrid, toggleCell, setGrid } = gameSlice.actions
 
 export default gameSlice.reducer

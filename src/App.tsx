@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import {
-  Heading,
   Flex,
   Box,
   Modal,
@@ -15,22 +14,27 @@ import {
   FormLabel,
   useDisclosure,
   Button,
-  Text,
   Input
 } from '@chakra-ui/react';
+
 import { RootState } from './Redux/Store/Store';
 import { useSelector, useDispatch } from 'react-redux'
-import { initializeGrid, setColumns, setRows } from './Redux/Features/Game';
+
+import { initializeGrid, setColumns, setGrid, setRows } from './Redux/Features/Game';
+import { setStep } from './Redux/Features/Step';
+
+import { TextFileParserType } from './Types/Utils';
+import { textFileParser } from './Utils/Utils';
+
 import { Header } from './components/Header/Header';
 import { Footer } from './components/Footer/Footer';
 import GameGrid from './components/Grid/GameGrid';
-import { FaCloud, FaGrinSquint } from 'react-icons/fa';
-import { textFileParser } from './Utils/Utils';
 
 
 function App() {
 
   useEffect(() => {
+    //After startup first we create a default 20x40 grid 
     dispatch(setRows(20));
     dispatch(setColumns(40));
     dispatch(initializeGrid({ rand: false }));
@@ -40,31 +44,22 @@ function App() {
   const rows = useSelector((state: RootState) => state.game.rows);
   const cols = useSelector((state: RootState) => state.game.cols);
 
-  const [widthError, setWidthError] = useState(false);
-  const [heightError, setHeightError] = useState(false);
-
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    // dispatch(setRows(40));
-    //dispatch(setColumns(30));
-    console.table(grid);
-
-  });
-
-  const handleSave = () => {
-
-
-
-  }
-
   const onUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    textFileParser(event).then(res => {
-      console.log(res);
+    //The method return a promise
+    textFileParser(event).then((res: TextFileParserType | null) => {
+      //If the result is not null we dispatch the actions for update data
+      if (res !== null) {
+        dispatch(setColumns(res.cols));
+        dispatch(setRows(res.rows));
+        dispatch(setStep(res.step));
+        dispatch(setGrid(res.newGrid));
+      } else {
+        alert("Error during file parsing");
+      }
     });
   }
 
@@ -100,34 +95,15 @@ function App() {
               <Input type="file" onChange={(event) => onUpload(event)} />
             </FormControl>
 
-
           </ModalBody>
 
           <ModalFooter>
             <Button
-              backgroundColor="#2B5F38"
-              color="white"
-              mr={3}
               onClick={() => {
-                handleSave();
-                onClose();
-              }}
-              _hover={{ background: "#21452A" }}
-              _activeLink={{ background: "#21452A" }}
-              _active={{ background: "#21452A" }}
-              _focus={{ background: "#21452A" }}
-            >
-              Save
-            </Button>
-
-            <Button
-              onClick={() => {
-                setHeightError(false);
-                setWidthError(false);
                 onClose();
               }}
             >
-              Cancel
+              Close
             </Button>
           </ModalFooter>
         </ModalContent>

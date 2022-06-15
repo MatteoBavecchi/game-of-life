@@ -1,3 +1,4 @@
+import { TextFileParserType } from "../Types/Utils";
 
 export const makeNewGrid = (height: number, width: number, rand?: boolean) => {
     let grid = [];
@@ -83,7 +84,7 @@ export const executeGame = (grid: boolean[][]) => {
 
 //textFileParsed parses data from the uploaded file
 //this method reurn a Promise because FileReader.onload is async
-export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>) => {
+export const textFileParser = (event: React.ChangeEvent<HTMLInputElement>): Promise<TextFileParserType | null> => {
     return new Promise((resolve, reject) => {
         var file = event.currentTarget.files![0];
         var reader = new FileReader();
