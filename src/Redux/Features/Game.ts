@@ -8,8 +8,8 @@ export interface GameState {
 }
 
 const initialState: GameState = {
-  rows: 20,
-  cols: 40,
+  rows: 0,
+  cols: 0,
   grid: []
 }
 

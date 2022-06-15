@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
     Heading,
@@ -7,27 +7,43 @@ import {
     HStack
 } from "@chakra-ui/react";
 
-import { FaPlay, FaRandom, FaFileUpload, FaPause } from "react-icons/fa";
+import { FaPlay, FaRandom, FaFileUpload, FaPause, FaUndo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Redux/Store/Store";
 
-import { play, pause, increment } from "../../Redux/Features/Step";
+import { play, pause, increment, setTimerId, setStep } from "../../Redux/Features/Step";
 import { initializeGrid, nextGrid, setColumns, setRows } from "../../Redux/Features/Game";
 
 export const Header = () => {
+
     const dispatch = useDispatch()
     const step = useSelector((state: RootState) => state.step.step);
     const isRunning = useSelector((state: RootState) => state.step.isRunning);
+    const timerId = useSelector((state: RootState) => state.step.timerId);
 
-    const handlePlay = () => {
-        let myInterval = setInterval(() => {
-            dispatch(play());
+    const handleButton = () => {
+
+        if (isRunning) {
+            dispatch(pause());
+            clearInterval(timerId);
+            dispatch(setTimerId(0));
+            return;
+        }
+        dispatch(play());
+        const newTimerId = setInterval(() => {
             dispatch(increment());
             dispatch(nextGrid());
         }, 500);
+        dispatch(setTimerId(newTimerId));
     }
-    const handlePause = () => {
-        // clearInterval(myInterval);
+
+
+    const clear = (rand: boolean) => {
+        if (isRunning) {
+            handleButton();
+        }
+        dispatch(setStep(0));
+        dispatch(initializeGrid({ rand: rand }));
     }
 
 
@@ -54,19 +70,22 @@ export const Header = () => {
                     </Button>
                     {
                         !isRunning ?
-                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePlay()} >
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handleButton()} >
                                 < FaPlay size={"24px"} />
                             </Button> :
-                            <Button colorScheme='white' variant={"outline"} onClick={() => handlePause()}>
+                            <Button colorScheme='white' variant={"outline"} onClick={() => handleButton()}>
                                 < FaPause size={"24px"} />
                             </Button>
                     }
-                    <Button colorScheme='white' variant={"outline"} onClick={() => dispatch(initializeGrid({ rand: true }))}>
+
+                    <Button colorScheme='white' variant={"outline"} onClick={() => clear(false)}>
+                        <FaUndo size={"24px"} />
+                    </Button>
+
+                    <Button colorScheme='white' variant={"outline"} onClick={() => clear(true)}>
                         < FaRandom size={"24px"} />
                     </Button>
-                    <Button colorScheme='white' variant={"outline"} >
-                        Next
-                    </Button>
+
                 </HStack>
 
             </Flex>

@@ -12,6 +12,12 @@ import { FaGrinSquint } from 'react-icons/fa';
 
 function App() {
 
+  useEffect(() => {
+    dispatch(setRows(20));
+    dispatch(setColumns(40));
+    dispatch(initializeGrid({ rand: false }));
+  }, []);
+
   const grid = useSelector((state: RootState) => state.game.grid);
   const rows = useSelector((state: RootState) => state.game.rows);
   const cols = useSelector((state: RootState) => state.game.cols);

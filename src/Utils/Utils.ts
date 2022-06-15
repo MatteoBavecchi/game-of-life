@@ -1,5 +1,4 @@
 
-
 export const makeNewGrid = (height: number, width: number, rand?: boolean) => {
     let grid = [];
     for (var i = 0; i < height; i++) {
@@ -43,11 +42,11 @@ export const countNeighbors = (grid: boolean[][], x: number, y: number) => {
 
 export const executeGame = (grid: boolean[][]) => {
 
-    //The sizes of the grid
+    //The size of the grid
     let height: number = grid.length;
     let width: number = grid[0].length;
 
-    //newGrid is a copy of grid
+    //newGrid will be the next state of the game
     var newGrid = makeNewGrid(height, width);
 
 
@@ -70,7 +69,7 @@ export const executeGame = (grid: boolean[][]) => {
 
             } else {
                 //If the cell is dead
-                if (aliveNeighbors == 3) {
+                if (aliveNeighbors === 3) {
                     // a new cell is born
                     newGrid[i][j] = true;
                 }
